@@ -27,8 +27,31 @@ class MemberCreateMutation(graphene.Mutation):
 
         return MemberCreateMutation(member)
 
+class MemberUpdateMutation(graphene.Mutation):
+    member = graphene.Field(MemberType)
+    class Arguments:
+        name =graphene.String()
+        is_son = graphene.Boolean()
+        household_count =graphene.Int()
+        id =graphene.ID(required=True)
+
+    def mutate(self, info, name, is_son, household_count, id):
+
+        member = Member.objects.get(pk=id)
+        if name is not None:
+            member.name = name
+        if household_count is not None:
+            member.household_count= household_count
+        if is_son is not None:
+            member.is_son =is_son
+
+        member.save()
+
+        return MemberUpdateMutation(member)
+
 class Mutation(graphene.ObjectType):
     create_member = MemberCreateMutation.Field()
+    update_member = MemberUpdateMutation.Field()
 
 
 
