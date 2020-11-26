@@ -25,7 +25,7 @@ class MemberCreateMutation(graphene.Mutation):
         member.save()
 
 
-        return MemberCreateMutation(member)
+        return MemberCreateMutation(member=member)
 
 class MemberUpdateMutation(graphene.Mutation):
     member = graphene.Field(MemberType)
@@ -47,12 +47,27 @@ class MemberUpdateMutation(graphene.Mutation):
 
         member.save()
 
-        return MemberUpdateMutation(member)
+        return MemberUpdateMutation(member=member)
+
+class MemberDeleteMutation(graphene.Mutation):
+    member = graphene.Field(MemberType)
+    class Arguments:
+        id =graphene.ID(required=True)
+
+    def mutate(self, info, id):
+
+        member = Member.objects.get(pk=id)
+        member.delete()
+
+        return MemberDeleteMutation(member=None)
+
+
+
 
 class Mutation(graphene.ObjectType):
     create_member = MemberCreateMutation.Field()
     update_member = MemberUpdateMutation.Field()
-
+    delete_member = MemberDeleteMutation.Field()
 
 
 
