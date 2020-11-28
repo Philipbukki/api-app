@@ -1,13 +1,19 @@
 from graphene_django.types import DjangoObjectType
 import graphene
-from .models import Member
+from .models import Member, Variable
 
 class MemberType(DjangoObjectType):
     class Meta:
         model =Member
-class Query(graphene.ObjectType):
-    all_members =graphene.List(MemberType)
 
+class VariableType(DjangoObjectType):
+    class Meta:
+        model = Variable
+class Query(graphene.ObjectType):
+    all_variables =graphene.List(VariableType)
+    all_members =graphene.List(MemberType)
+    def resolve_all_variables(self, info, **kwargs):
+        return Variable.objects.all()
     def resolve_all_members(self, info, **kwargs):
         return Member.objects.all()
 
