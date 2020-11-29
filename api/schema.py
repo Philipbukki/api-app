@@ -69,6 +69,30 @@ class MemberUpdateMutation(graphene.Mutation):
 
         return MemberUpdateMutation(member=member)
 
+class VariableUpdateMutation(graphene.Mutation):
+    variable = graphene.Field(VariableType)
+
+
+    class Arguments:
+        name = graphene.String()
+        value = graphene.Int()
+        id = graphene.ID(required=True)
+
+
+    def mutate(self, info, name, value, id):
+
+
+        variable = Variable.objects.get(pk=id)
+        if name is not None:
+            variable.name = name
+        if value is not None:
+            variable.value = value
+
+        variable.save()
+
+        return VariableUpdateMutation(variable =variable)
+
+
 class MemberDeleteMutation(graphene.Mutation):
     member = graphene.Field(MemberType)
     class Arguments:
@@ -89,6 +113,7 @@ class Mutation(graphene.ObjectType):
     update_member = MemberUpdateMutation.Field()
     delete_member = MemberDeleteMutation.Field()
     create_variable = VariableCreateMutation.Field()
+    update_variable = VariableUpdateMutation.Field()
 
 
 
