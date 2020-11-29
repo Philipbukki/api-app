@@ -106,6 +106,18 @@ class MemberDeleteMutation(graphene.Mutation):
         return MemberDeleteMutation(member=None)
 
 
+class VariableDeleteMutation(graphene.Mutation):
+    variable = graphene.Field(VariableType)
+    class Arguments:
+        id =graphene.ID(required=True)
+
+    def mutate(self, info, id):
+
+        variable = Variable.objects.get(pk=id)
+        variable.delete()
+
+        return VariableDeleteMutation(variable=None)
+
 
 
 class Mutation(graphene.ObjectType):
@@ -114,6 +126,7 @@ class Mutation(graphene.ObjectType):
     delete_member = MemberDeleteMutation.Field()
     create_variable = VariableCreateMutation.Field()
     update_variable = VariableUpdateMutation.Field()
+    delete_variable = VariableDeleteMutation.Field()
 
 
 
