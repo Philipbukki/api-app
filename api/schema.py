@@ -33,6 +33,20 @@ class MemberCreateMutation(graphene.Mutation):
 
         return MemberCreateMutation(member=member)
 
+class VariableCreateMutation(graphene.Mutation):
+    variable = graphene.Field(VariableType)
+    class Arguments:
+        name =graphene.String(required=True)
+        value = graphene.Int(required=True)
+
+    def mutate(self, info, name, value):
+
+        variable = Variable.objects.create(name=name, value=value)
+        variable.save()
+
+
+        return VariableCreateMutation(variable=variable)
+
 class MemberUpdateMutation(graphene.Mutation):
     member = graphene.Field(MemberType)
     class Arguments:
@@ -74,6 +88,7 @@ class Mutation(graphene.ObjectType):
     create_member = MemberCreateMutation.Field()
     update_member = MemberUpdateMutation.Field()
     delete_member = MemberDeleteMutation.Field()
+    create_variable = VariableCreateMutation.Field()
 
 
 
