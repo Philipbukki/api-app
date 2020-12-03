@@ -33,8 +33,11 @@ class MemberCreateMutation(graphene.Mutation):
         household_count = graphene.Int(required=True)
 
     def mutate(self, info, name, is_son, household_count):
+        h_count = 0
+        if is_son:
+            h_count = household_count
         member = Member.objects.create(
-            name=name, is_son=is_son, household_count=household_count)
+            name=name, is_son=is_son, household_count=h_count)
         member.save()
 
         return MemberCreateMutation(member=member)
